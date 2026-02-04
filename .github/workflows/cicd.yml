@@ -286,17 +286,16 @@ jobs:
       # Document: Azure Login https://github.com/marketplace/actions/azure-login
       # We will use OpenID Connect to login https://github.com/marketplace/actions/azure-login#login-with-openid-connect-oidc-recommended
       - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        run: |
+          echo "Using kubeconfig authentication instead of Azure login"
         
       # Set AKS context so we that can deploy to the azure cluster
       # Document: Azure Kubernetes set context https://github.com/marketplace/actions/azure-kubernetes-set-context
       - name: Set AKS context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: ${{ env.AZ_RESOURCE_GROUP }}
-          cluster-name: ${{ env.AZ_CLUSTER_NAME }}
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.AKS_KUBECONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
       # Deploy the new helm chart to AKS cluster with helm with the bash script in `run`
       - name: Deploy the services to the AKS cluster with helm
