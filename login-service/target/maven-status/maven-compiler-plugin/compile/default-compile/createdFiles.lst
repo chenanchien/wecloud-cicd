@@ -1,0 +1,8 @@
+edu/cmu/config/security/MyUserDetailsService.class
+edu/cmu/model/UserCredentialRepository.class
+edu/cmu/model/UserCredential.class
+edu/cmu/config/security/MySimpleUrlAuthenticationSuccessHandler.class
+edu/cmu/LoginApplication.class
+edu/cmu/config/security/WebSecurityConfig.class
+edu/cmu/controller/LoginReadinessController.class
+edu/cmu/config/MvcConfig.class

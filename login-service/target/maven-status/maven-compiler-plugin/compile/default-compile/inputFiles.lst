@@ -1,0 +1,8 @@
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/config/security/MyUserDetailsService.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/config/MvcConfig.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/config/security/WebSecurityConfig.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/LoginApplication.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/model/UserCredentialRepository.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/model/UserCredential.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/config/security/MySimpleUrlAuthenticationSuccessHandler.java
+/home/clouduser/Project_Containers/task5/login-service/src/main/java/edu/cmu/controller/LoginReadinessController.java
