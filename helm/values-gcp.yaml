@@ -1,0 +1,95 @@
+global:
+  environment: gcp
+
+weCloud:
+  imageRegistry:
+    gcp: us-central1-docker.pkg.dev/gcp-docker-kubernetes-486318/profile-service-repo
+
+profile:
+  releaseName: spring-profile
+  replicaCount: 3
+  hpa:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+    cpuRequest: 200m
+  repository: us-central1-docker.pkg.dev/gcp-docker-kubernetes-486318/profile-service-repo
+  image: profile-service
+  tag: v0.2.0-mysql-20260203210919
+  service:
+    name: spring-profile-service
+    type: NodePort
+    port: 80
+    targetPort: 8080
+  mysql:
+    host: mysql-profile.default.svc.cluster.local
+    port: 3306
+    database: test
+    user: profileUser
+    password: ProfilePass456
+
+chat:
+  releaseName: spring-chat
+  replicaCount: 3
+  hpa:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+    cpuRequest: 200m
+  repository: us-central1-docker.pkg.dev/gcp-docker-kubernetes-486318/profile-service-repo
+  image: groupchat
+  tag: v0.1.0-chat-20260203212128
+  service:
+    name: spring-chat-service
+    type: NodePort
+    port: 80
+    targetPort: 8080
+  mysql:
+    host: mysql-chat.default.svc.cluster.local
+    port: 3306
+    database: test
+    user: chatUser
+    password: ChatPass456
+  redis:
+    host: redis-service
+    port: 6379
+    password: SuperSecretRedisPassword
+    topic: /topic/messages
+  profileEndpoints: "http://20.242.221.126/profile"
+
+login:
+  releaseName: spring-login
+  replicaCount: 3
+  hpa:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+    cpuRequest: 200m
+  repository: us-central1-docker.pkg.dev/gcp-docker-kubernetes-486318/profile-service-repo
+  image: login
+  tag: v0.1.0-login-redirect
+  service:
+    name: spring-login-service
+    type: NodePort
+    port: 80
+    targetPort: 8080
+  mysql:
+    host: mysql-login.default.svc.cluster.local
+    port: 3306
+    database: test
+    user: loginUser
+    password: LoginPass456
+  chatEndpoint: "http://GCP_INGRESS_IP/chat"
+
+redis:
+  image: "redis:7"
+  host: "redis-service"
+  password: "SuperSecretRedisPassword"
+  passwordSecret: "redis-secret"
+  passwordKey: "REDIS_PASSWORD"
+  port: "6379"
+  containerPort: 6379
+  topic: "/topic/messages"
+  service:
+    port: 6379
+    targetPort: 6379

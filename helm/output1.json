@@ -1,0 +1,11 @@
+{
+    "contextscount": "true",
+    "chatservicecountazure": "true",
+    "wecloudhelmvalidationgcp": "deployed",
+    "wecloudhelmvalidationaks": "deployed",
+    "secretdatalogingcp": "2",
+    "secretdataprofilegcp": "2",
+    "secretdatachatgcp": "2",
+    "secretdataloginaks": "2",
+    "secretdataprofileaks": "2"
+}

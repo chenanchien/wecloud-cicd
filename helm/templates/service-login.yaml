@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.login.service.name }}
+  labels:
+    project: containers
+spec:
+  type: {{ .Values.login.service.type }}
+  selector:
+    app: login-service
+  ports:
+    - protocol: TCP
+      port: {{ .Values.login.service.port }}
+      targetPort: {{ .Values.login.service.targetPort }}

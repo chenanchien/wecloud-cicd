@@ -1,0 +1,80 @@
+{{- if eq .Values.global.environment "gcp" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-chat-deployment
+  labels:
+    app: chat-service
+    project: containers
+spec:
+  replicas: {{ .Values.chat.replicaCount }}
+  selector:
+    matchLabels:
+      app: chat-service
+  template:
+    metadata:
+      labels:
+        app: chat-service
+        project: containers
+    spec:
+      containers:
+      - name: chat-service
+        image: "{{ .Values.chat.repository }}/{{ .Values.chat.image }}:{{ .Values.chat.tag }}"
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: spring-chat-config
+        env:
+        - name: MYSQL_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: chat-secret
+              key: mysql-username
+        - name: MYSQL_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: chat-secret
+              key: mysql-password
+        - name: SPRING_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.passwordSecret }}
+              key: {{ .Values.redis.passwordKey }}
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "{{ .Values.chat.hpa.cpuRequest }}"
+          limits:
+            memory: "1536Mi"
+            cpu: "600m"
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 10
+
+{{- end }}
+---
+{{- if eq .Values.global.environment "gcp" }}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: spring-chat-autoscaling
+  namespace: default
+  labels:
+    project: containers
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: spring-chat-deployment
+  minReplicas: {{ .Values.chat.hpa.minReplicas }}
+  maxReplicas: {{ .Values.chat.hpa.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.chat.hpa.targetCPUUtilizationPercentage }}
+{{- end }}

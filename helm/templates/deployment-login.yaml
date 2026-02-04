@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-login-deployment
+  labels:
+    app: login-service
+    project: containers
+spec:
+  replicas: {{ .Values.login.replicaCount }}
+  selector:
+    matchLabels:
+      app: login-service
+  template:
+    metadata:
+      labels:
+        app: login-service
+        project: containers
+    spec:
+      containers:
+      - name: login-service
+        {{- if eq .Values.global.environment "gcp" }}
+        image: "{{ .Values.login.repository }}/{{ .Values.login.image }}:{{ .Values.login.tag }}"
+        {{- else }}
+        image: "{{ .Values.login.repository }}/{{ .Values.login.image }}:{{ .Values.login.tag }}"
+        {{- end }}
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: spring-login-config
+        env:
+        - name: MYSQL_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: login-secret
+              key: mysql-username
+        - name: MYSQL_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: login-secret
+              key: mysql-password
+        {{- if eq .Values.global.environment "gcp" }}
+        - name: SPRING_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.passwordSecret }}
+              key: {{ .Values.redis.passwordKey }}
+        {{- end }}
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "{{ .Values.login.hpa.cpuRequest }}"
+          limits:
+            memory: "2048Mi"
+            cpu: "1000m"
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: spring-login-autoscaling
+  namespace: default
+  labels:
+    project: containers
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: spring-login-deployment
+  minReplicas: {{ .Values.login.hpa.minReplicas }}
+  maxReplicas: {{ .Values.login.hpa.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.login.hpa.targetCPUUtilizationPercentage }}

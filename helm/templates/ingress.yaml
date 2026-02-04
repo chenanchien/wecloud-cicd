@@ -1,0 +1,64 @@
+{{- if eq .Values.global.environment "azure" }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wecloud-ingress
+  labels:
+    app.kubernetes.io/name: wecloud
+    app.kubernetes.io/managed-by: Helm
+    project: containers
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /login
+        pathType: Prefix
+        backend:
+          service:
+            name: spring-login-service
+            port:
+              number: 80
+      - path: /profile
+        pathType: Prefix
+        backend:
+          service:
+            name: spring-profile-service
+            port:
+              number: 80
+{{- else if eq .Values.global.environment "gcp" }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wecloud-ingress
+  labels:
+    app.kubernetes.io/name: wecloud
+    app.kubernetes.io/managed-by: Helm
+    project: containers
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /chat
+        pathType: Prefix
+        backend:
+          service:
+            name: spring-chat-service
+            port:
+              number: 80
+      - path: /login
+        pathType: Prefix
+        backend:
+          service:
+            name: spring-login-service
+            port:
+              number: 80
+      - path: /profile
+        pathType: Prefix
+        backend:
+          service:
+            name: spring-profile-service
+            port:
+              number: 80
+{{- end }}

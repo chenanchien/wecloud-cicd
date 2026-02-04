@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.profile.releaseName }}-deployment
+  labels:
+    app: profile-service
+    project: containers
+spec:
+  replicas: {{ .Values.profile.replicaCount }}
+  selector:
+    matchLabels:
+      app: profile-service
+  template:
+    metadata:
+      labels:
+        app: profile-service
+        project: containers
+    spec:
+      containers:
+      - name: profile-container
+        {{- if eq .Values.global.environment "gcp" }}
+        image: {{ .Values.weCloud.imageRegistry.gcp }}/{{ .Values.profile.image }}:{{ .Values.profile.tag }}
+        {{- else }}
+        image: {{ .Values.profile.repository }}/{{ .Values.profile.image }}:{{ .Values.profile.tag }}
+        {{- end }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.profile.service.targetPort }}
+        env:
+        - name: MYSQL_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: spring-profile-config
+              key: MYSQL_DB_HOST
+        - name: MYSQL_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: spring-profile-config
+              key: MYSQL_DB_PORT
+        - name: MYSQL_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: profile-secret
+              key: mysql-username
+        - name: MYSQL_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: profile-secret
+              key: mysql-password
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "400m"
+          requests:
+            memory: "512Mi"
+            cpu: "{{ .Values.profile.hpa.cpuRequest }}"
+        startupProbe:
+          tcpSocket:
+            port: {{ .Values.profile.service.targetPort }}
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 60
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.profile.service.targetPort }}
+          initialDelaySeconds: 40
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.profile.service.targetPort }}
+          initialDelaySeconds: 40
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: spring-profile-autoscaling
+  namespace: default
+  labels:
+    project: containers
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.profile.releaseName }}-deployment
+  minReplicas: {{ .Values.profile.hpa.minReplicas }}
+  maxReplicas: {{ .Values.profile.hpa.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.profile.hpa.targetCPUUtilizationPercentage }}

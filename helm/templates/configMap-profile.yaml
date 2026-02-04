@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spring-profile-config
+  labels:
+    app: profile-service
+data:
+  MYSQL_DB_HOST: {{ .Values.profile.mysql.host }}
+  MYSQL_DB_PORT: "{{ .Values.profile.mysql.port }}"
+  MYSQL_DB_NAME: {{ .Values.profile.mysql.database }}

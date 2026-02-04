@@ -1,0 +1,9 @@
+{
+    "wecloudhelmvalidation": "deployed",
+    "profilesvctype": "NodePort",
+    "chatsvctype": "NodePort",
+    "loginsvctype": "NodePort",
+    "secretdataprofile": "2",
+    "secretdatalogin": "2",
+    "secretdatachat": "2"
+}

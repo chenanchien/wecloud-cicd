@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spring-chat-config
+  labels:
+    app: chat-service
+data:
+  MYSQL_DB_HOST: {{ .Values.chat.mysql.host }}
+  MYSQL_DB_PORT: "{{ .Values.chat.mysql.port }}"
+  MYSQL_DB_NAME: {{ .Values.chat.mysql.database }}
+  SPRING_REDIS_HOST: {{ .Values.chat.redis.host }}
+  SPRING_REDIS_PORT: "{{ .Values.chat.redis.port }}"
+  LIST_OF_PROFILE_ENDPOINTS: "{{ .Values.chat.profileEndpoints }}"

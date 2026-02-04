@@ -1,0 +1,56 @@
+{{- if eq .Values.global.environment "gcp" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: "{{ .Values.redis.image }}"
+          ports:
+            - containerPort: {{ .Values.redis.service.targetPort }}
+          volumeMounts:
+            - mountPath: "/bitnami"
+              name: cache-volume
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redis.passwordSecret }}
+                  key: {{ .Values.redis.passwordKey }}
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: {{ .Values.redis.service.port }}
+      targetPort: {{ .Values.redis.service.targetPort }}
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.redis.passwordSecret }}
+type: Opaque
+data:
+  {{ .Values.redis.passwordKey }}: U3VwZXJTZWNyZXRSZWRpc1Bhc3N3b3Jk
+{{- end }}
