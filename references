@@ -1,0 +1,66 @@
+{  
+    "referenceGuide" : "Cite all the reference sources in the required format. Proper citations will help you avoid unnecessary trouble. Read JSON grammar from Internet if needed.",
+    "websites":[  
+        {  
+            "title":"GitHub Actions - Authenticate to Google Cloud",
+            "url":"https://github.com/marketplace/actions/authenticate-to-google-cloud",
+            "code":"cicd.yml - GCP authentication steps",
+            "description":"Used for authenticating GitHub Actions with GCP using service account key JSON"
+        },
+        {  
+            "title":"Docker Login Action - Google Artifact Registry",
+            "url":"https://github.com/docker/login-action",
+            "code":"cicd.yml - GAR login step",
+            "description":"Used for logging into Google Artifact Registry to push Docker images"
+        },
+        {  
+            "title":"Google Cloud SDK Setup",
+            "url":"https://github.com/marketplace/actions/set-up-gcloud-cloud-sdk-environment",
+            "code":"cicd.yml - Setup gcloud CLI step",
+            "description":"Used for setting up gcloud CLI in GitHub Actions"
+        },
+        {  
+            "title":"GKE Credentials",
+            "url":"https://github.com/marketplace/actions/get-gke-credentials",
+            "code":"cicd.yml - Get GKE credentials step",
+            "description":"Used for getting GKE cluster credentials for deployment"
+        },
+        {  
+            "title":"Azure Container Registry Login",
+            "url":"https://github.com/marketplace/actions/microsoft-azure-container-registry-login",
+            "code":"cicd.yml - ACR login step",
+            "description":"Used for logging into Azure Container Registry to push Docker images"
+        },
+        {  
+            "title":"Azure Login with OIDC",
+            "url":"https://github.com/marketplace/actions/azure-login",
+            "code":"cicd.yml - Azure login step and setup-azure-oidc.sh",
+            "description":"Used for authenticating with Azure using OpenID Connect for secure authentication"
+        },
+        {  
+            "title":"Azure Kubernetes Set Context",
+            "url":"https://github.com/marketplace/actions/azure-kubernetes-set-context",
+            "code":"cicd.yml - Set AKS context step",
+            "description":"Used for setting AKS cluster context for deployment"
+        },
+        {  
+            "title":"GitHub Actions - Changed Files",
+            "url":"https://github.com/tj-actions/changed-files",
+            "code":"cicd.yml - check-changed-files job",
+            "description":"Used for detecting which service files have changed to trigger selective builds"
+        },
+        {  
+            "title":"GitHub Actions Contexts",
+            "url":"https://docs.github.com/en/actions/learn-github-actions/contexts#github-context",
+            "code":"cicd.yml - DOCKER_TAG environment variable",
+            "description":"Used github.sha context to tag Docker images with commit SHA"
+        },
+        {  
+            "title":"gcloud auth configure-docker",
+            "url":"https://cloud.google.com/sdk/gcloud/reference/auth/configure-docker",
+            "code":"cicd.yml - Configure Docker with gcloud CLI step",
+            "description":"Used for configuring Docker to authenticate with Google Artifact Registry"
+        }
+    ],
+    "collaborators":[]
+}
