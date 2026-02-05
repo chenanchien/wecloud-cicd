@@ -3,7 +3,7 @@ global:
 
 profile:
   releaseName: spring-profile
-  replicaCount: 2
+  replicaCount: 3
   hpa:
     minReplicas: 1
     maxReplicas: 5
