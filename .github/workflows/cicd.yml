@@ -300,9 +300,8 @@ jobs:
           resource-group: ${{ env.AZ_RESOURCE_GROUP }}
           cluster-name: ${{ env.AZ_CLUSTER_NAME }}
 
-      # Fallback: Use kubeconfig if Azure login fails
-      - name: Setup kubeconfig fallback
-        if: failure()
+      # Setup kubeconfig from secrets
+      - name: Setup kubeconfig
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.AKS_KUBECONFIG }}" > $HOME/.kube/config
