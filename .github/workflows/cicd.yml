@@ -287,7 +287,6 @@ jobs:
       # We will use OpenID Connect to login https://github.com/marketplace/actions/azure-login#login-with-openid-connect-oidc-recommended
       - name: Login to Azure
         uses: azure/login@v1
-        continue-on-error: true
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -297,17 +296,9 @@ jobs:
       # Document: Azure Kubernetes set context https://github.com/marketplace/actions/azure-kubernetes-set-context
       - name: Set AKS context
         uses: azure/aks-set-context@v3
-        continue-on-error: true
         with:
           resource-group: ${{ env.AZ_RESOURCE_GROUP }}
           cluster-name: ${{ env.AZ_CLUSTER_NAME }}
-      
-      # Configure kubectl with kubeconfig secret as fallback
-      - name: Configure kubectl
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.AKS_KUBECONFIG }}" > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
 
       # Deploy the new helm chart to AKS cluster with helm with the bash script in `run`
       - name: Deploy the services to the AKS cluster with helm
