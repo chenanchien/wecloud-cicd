@@ -261,6 +261,7 @@ jobs:
       always() &&
       (needs.build-push-image.result == 'success' && needs.check-changed-files.outputs.profile-service-java-any-changed == 'true') ||
       (needs.build-push-image.result == 'success' && needs.check-changed-files.outputs.login-service-java-any-changed == 'true') || 
+      (needs.build-push-image.result == 'success' && needs.check-changed-files.outputs.chat-service-java-any-changed == 'true') ||
       (needs.build-push-image.result == 'skipped' && needs.check-changed-files.outputs.helm-any-changed == 'true')
     steps:
       # Checkout to the repo
@@ -281,6 +282,12 @@ jobs:
         if: needs.check-changed-files.outputs.login-service-java-any-changed == 'true' 
         run: |
           sed -i '/login:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-azure.yaml
+
+      # complete the bash script in `run` with your docker image name and file path
+      - name: update chat deployment
+        if: needs.check-changed-files.outputs.chat-service-java-any-changed == 'true' 
+        run: |
+          sed -i '/chat:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-azure.yaml
 
       # Login to azure
       # Document: Azure Login https://github.com/marketplace/actions/azure-login
@@ -312,6 +319,7 @@ jobs:
         if: | 
           needs.check-changed-files.outputs.profile-service-java-any-changed == 'true' ||
           needs.check-changed-files.outputs.login-service-java-any-changed == 'true' ||
+          needs.check-changed-files.outputs.chat-service-java-any-changed == 'true' ||
           (needs.build-push-image.result == 'skipped' && needs.check-changed-files.outputs.helm-any-changed == 'true')
         run: |
           helm upgrade --install wecloud ./helm -f ./helm/values-azure.yaml
