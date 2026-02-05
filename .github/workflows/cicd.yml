@@ -208,21 +208,19 @@ jobs:
 
       # Update value.yamls to use the docker image we just pushed for profile-service
       # complete the bash script in `run` with your docker image name and file path
-      - name: Update profile deployment
+      - name: update profile deployment
         if: needs.check-changed-files.outputs.profile-service-java-any-changed == 'true' 
         run: |
           sed -i '/profile:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-gcp.yaml
 
-      # Update value.yamls to use the docker image we just pushed for login-service
       # complete the bash script in `run` with your docker image name and file path
-      - name: Update login deployment
+      - name: update login deployment
         if: needs.check-changed-files.outputs.login-service-java-any-changed == 'true' 
         run: |
           sed -i '/login:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-gcp.yaml
 
-      # Update value.yamls to use the docker image we just pushed for chat-service
       # complete the bash script in `run` with your docker image name and file path
-      - name: Update chat deployment
+      - name: update chat deployment
         if: needs.check-changed-files.outputs.chat-service-java-any-changed == 'true' 
         run: |
           sed -i '/chat:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-gcp.yaml
@@ -273,21 +271,21 @@ jobs:
 
       # Update value.yamls to use the docker image we just pushed for profile-service
       # complete the bash script in `run` with your docker image name and file path
-      - name: Update profile deployment
+      - name: update profile deployment
         if: needs.check-changed-files.outputs.profile-service-java-any-changed == 'true' 
         run: |
           sed -i '/profile:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-azure.yaml
 
       # Update value.yamls to use the docker image we just pushed for login-service
       # complete the bash script in `run` with your docker image name and file path
-      - name: Update login deployment
+      - name: update login deployment
         if: needs.check-changed-files.outputs.login-service-java-any-changed == 'true' 
         run: |
           sed -i '/login:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-azure.yaml
 
       # Update value.yamls to use the docker image we just pushed for chat-service
       # complete the bash script in `run` with your docker image name and file path
-      - name: Update chat deployment
+      - name: update chat deployment
         if: needs.check-changed-files.outputs.chat-service-java-any-changed == 'true' 
         run: |
           sed -i '/chat:/,/tag:/s|tag: ".*"|tag: "${{ env.DOCKER_TAG }}"|' helm/values-azure.yaml
