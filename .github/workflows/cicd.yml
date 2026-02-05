@@ -307,4 +307,7 @@ jobs:
           needs.check-changed-files.outputs.login-service-java-any-changed == 'true' ||
           (needs.build-push-image.result == 'skipped' && needs.check-changed-files.outputs.helm-any-changed == 'true')
         run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.AKS_KUBECONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
           helm upgrade --install wecloud ./helm -f ./helm/values-azure.yaml
