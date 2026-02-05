@@ -7,7 +7,7 @@ weCloud:
 
 profile:
   releaseName: spring-profile
-  replicaCount: 3
+  replicaCount: 2
   hpa:
     minReplicas: 1
     maxReplicas: 5
