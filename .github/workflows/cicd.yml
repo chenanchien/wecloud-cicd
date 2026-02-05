@@ -308,13 +308,6 @@ jobs:
           resource-group: ${{ env.AZ_RESOURCE_GROUP }}
           cluster-name: ${{ env.AZ_CLUSTER_NAME }}
 
-      # Setup kubeconfig from secrets
-      - name: Setup kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.AKS_KUBECONFIG }}" > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-
       # Deploy the new helm chart to AKS cluster with helm with the bash script in `run`
       - name: Deploy the services to the AKS cluster with helm
         if: | 
